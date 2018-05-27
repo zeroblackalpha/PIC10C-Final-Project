@@ -14,17 +14,19 @@ public:
     bool isConverged();
 
 private:
-    int calculateSquaredDistance(int imageNum, int centroidNum);
+    double calculateSquaredDistance(int imageNum, int centroidNum);
     int classifyPoint(int a);
+    void classifyPoints();
     void initializeCentroids();
     void calculateCentroids();
     void generateImage();
 
     vector<unsigned char> imageData;
     vector<unsigned char> newImageData;    
-    vector<unsigned char> centroidData;
+    vector<double> centroidData;
     vector<int> clusterAssignments;
     int clusterNum;
+    int iterNum = 0;
     unsigned width;
     unsigned height;
     bool converged = false;

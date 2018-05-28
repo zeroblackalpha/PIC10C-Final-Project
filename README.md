@@ -5,10 +5,13 @@ The goal is to provide a GUI that can both take in and spit out PNG files for ea
 The choice of PNG is a necessary one as an uncompressed image is required.
 
 ## Incomplete features
-1. K-Means++
-2. Classification optimizations
-3. GUI
-4. Multi-threading
+1. Classification optimizations
+2. GUI
+3. Multi-threading
+
+## Related papers
+Credits to these amazing authors and their K-Means++ seeding method for the initializations:
+[Paper Here](http://ilpubs.stanford.edu:8090/778/1/2006-13.pdf)
 
 ## Attributions
 Credits to lodev.org and their fantastic LodePNG library.

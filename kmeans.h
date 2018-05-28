@@ -15,6 +15,7 @@ public:
 
 private:
     double calculateSquaredDistance(int imageNum, int centroidNum);
+    int calculateSquaredDistanceOther(int imageNum, int centroidNum);
     int classifyPoint(int a);
     void classifyPoints();
     void initializeCentroids();

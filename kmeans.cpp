@@ -1,6 +1,5 @@
 #include<iostream>
 #include<vector>
-#include<numeric>
 #include<cmath>
 #include<chrono>
 #include<random>
@@ -9,9 +8,6 @@
 
 using std::cout;
 using std::endl;
-using std::inner_product;
-using std::pow;
-using std::plus;
 using std::uniform_int_distribution;
 
 kmeans::kmeans(const char* filename, int clusterNum):clusterNum(clusterNum) {
@@ -26,11 +22,44 @@ kmeans::kmeans(const char* filename, int clusterNum):clusterNum(clusterNum) {
 void kmeans::initializeCentroids() {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine generator (seed);
-    uniform_int_distribution<int> distribution(0,clusterNum - 1);
-    for (int i = 0; i < width*height; ++i){
-        clusterAssignments[i] = distribution(generator);
+    vector<long long> distances(width*height, 1);
+    vector<int> centroidIndex(clusterNum, 0);
+    long long total = width*height;
+    for (int i = 0; i < clusterNum; ++i) {
+        uniform_int_distribution<long long> distribution(1,total);
+        long long randomNum = distribution(generator);
+        long long temp = 0;
+        int newCentroid = 0;
+        for (int j = 0; j < width*height; ++j) {
+            temp += distances[j];
+            if (randomNum >= temp) {
+                newCentroid = j;
+            }
+            else {
+                break;
+            }
+        }
+        centroidIndex[i] = newCentroid;
+        for (int j = 0; j < width*height; ++j) {
+            int dist = calculateSquaredDistanceOther(j, centroidIndex[0]);
+            for (int k = 1; k < i + 1; ++k) {
+                if (calculateSquaredDistanceOther(j, centroidIndex[k]) < dist) {
+                    dist = calculateSquaredDistanceOther(j, centroidIndex[k]);
+                }
+            }
+            distances[j] = dist;
+        }
+        total = 0;
+        for (auto x : distances) {
+            total += x;
+        }
     }
-    this->calculateCentroids();
+    cout << "Completed Initializations" << endl;
+    for (int i = 0; i < clusterNum; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            centroidData[4*i + j] = (double)imageData[4*centroidIndex[i]+j];
+        }
+    }
 }
 
 void kmeans::generateImage() {
@@ -47,13 +76,23 @@ void kmeans::writePNG(const char* filename) {
 }
 
 bool kmeans::isConverged() {
-    return converged; //PLZ fix
+    return converged;
 }
 
 double kmeans::calculateSquaredDistance(int imageNum, int centroidNum) {
     double sum = 0;
     for (int i = 0; i < 4; ++i) {
         double temp = (double)imageData[4*imageNum+i]-centroidData[4*centroidNum+i];
+        temp *= temp;
+        sum += temp;
+    }
+    return sum;
+}
+
+int kmeans::calculateSquaredDistanceOther(int imageNum, int centroidNum) {
+    int sum = 0;
+    for (int i = 0; i < 4; ++i) {
+        int temp = imageData[4*imageNum+i]-imageData[4*centroidNum+i];
         temp *= temp;
         sum += temp;
     }

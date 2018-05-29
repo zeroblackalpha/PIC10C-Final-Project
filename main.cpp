@@ -1,13 +1,11 @@
-#include<iostream>
-#include "kmeans.h"
+#include "mainwindow.h"
+#include <QApplication>
 
-int main() {
-    const char* filename = "test.png";
-    const char* filename1 = "test1.png";
-    kmeans image = kmeans(filename, 10);
-    while (!image.isConverged()) {
-        image.nextIteration();
-    }
-    image.writePNG(filename1);
-    system("pause");
+int main(int argc, char *argv[])
+{
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+
+    return a.exec();
 }

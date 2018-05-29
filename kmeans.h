@@ -7,18 +7,22 @@ using std::vector;
 
 class kmeans {
 public:
-    kmeans() = delete;
+    kmeans();
     kmeans(const char* filename, int clusterNum);
+    ~kmeans();
+    const unsigned char* getString();
+    int getWidth();
+    int getHeight();
     void writePNG(const char* filename);
     void nextIteration();
     bool isConverged();
+    void initializeCentroids();
 
 private:
     double calculateSquaredDistance(int imageNum, int centroidNum);
     int calculateSquaredDistanceOther(int imageNum, int centroidNum);
     int classifyPoint(int a);
     void classifyPoints();
-    void initializeCentroids();
     void calculateCentroids();
     void generateImage();
 

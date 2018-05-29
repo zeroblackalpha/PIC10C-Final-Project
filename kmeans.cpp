@@ -10,13 +10,20 @@ using std::cout;
 using std::endl;
 using std::uniform_int_distribution;
 
+kmeans::kmeans() {
+
+}
+
 kmeans::kmeans(const char* filename, int clusterNum):clusterNum(clusterNum) {
     unsigned error = lodepng::decode(imageData, width, height, filename);
     if(error) cout << "decoder error " << error << ": " << lodepng_error_text(error) << endl;
     newImageData = imageData;
     centroidData = vector<double>(clusterNum * 4, 0);
     clusterAssignments = vector<int>(width * height, 0);
-    this->initializeCentroids();
+}
+
+kmeans::~kmeans() {
+
 }
 
 void kmeans::initializeCentroids() {
@@ -30,7 +37,7 @@ void kmeans::initializeCentroids() {
         long long randomNum = distribution(generator);
         long long temp = 0;
         int newCentroid = 0;
-        for (int j = 0; j < width*height; ++j) {
+        for (size_t j = 0; j < width*height; ++j) {
             temp += distances[j];
             if (randomNum >= temp) {
                 newCentroid = j;
@@ -40,7 +47,7 @@ void kmeans::initializeCentroids() {
             }
         }
         centroidIndex[i] = newCentroid;
-        for (int j = 0; j < width*height; ++j) {
+        for (size_t j = 0; j < width*height; ++j) {
             int dist = calculateSquaredDistanceOther(j, centroidIndex[0]);
             for (int k = 1; k < i + 1; ++k) {
                 if (calculateSquaredDistanceOther(j, centroidIndex[k]) < dist) {
@@ -63,7 +70,7 @@ void kmeans::initializeCentroids() {
 }
 
 void kmeans::generateImage() {
-    for (int i = 0; i < width*height; ++i) {
+    for (size_t i = 0; i < width*height; ++i) {
         for (int j = 0; j < 4; ++j) {
             newImageData[4*i + j] = (unsigned char)centroidData[4*clusterAssignments[i]+j];
         }
@@ -73,6 +80,18 @@ void kmeans::generateImage() {
 void kmeans::writePNG(const char* filename) {
     unsigned error = lodepng::encode(filename, newImageData, width, height);
     if(error) cout << "encoder error " << error << ": "<< lodepng_error_text(error) << endl;
+}
+
+const unsigned char* kmeans::getString() {
+    return reinterpret_cast<const unsigned char*>(newImageData.data());
+}
+
+int kmeans::getWidth() {
+    return width;
+}
+
+int kmeans::getHeight() {
+    return height;
 }
 
 bool kmeans::isConverged() {
@@ -115,7 +134,7 @@ int kmeans::classifyPoint(int a) {
 void kmeans::calculateCentroids() {
     vector<int> tally(clusterNum, 0);
     centroidData = vector<double>(clusterNum*4, 0);
-    for (int i = 0; i < width*height; ++i) {
+    for (size_t i = 0; i < width*height; ++i) {
         tally[clusterAssignments[i]] += 1;
         for (int j = 0; j < 4; ++j) {
             centroidData[4*clusterAssignments[i]+j] += imageData[4*i+j];
@@ -130,7 +149,7 @@ void kmeans::calculateCentroids() {
 
 void kmeans::classifyPoints() {
     vector<int> compare = clusterAssignments;
-    for (int i = 0; i < width*height; ++i) {
+    for (size_t i = 0; i < width*height; ++i) {
         clusterAssignments[i] = classifyPoint(i);
     }
     if (clusterAssignments == compare) {

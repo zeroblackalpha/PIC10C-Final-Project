@@ -1,9 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "kmeans.h"
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent):QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    QObject::connect(this, SIGNAL(valueChanged(int)), ui->IterationCount, SLOT(setNum(int)));
 }
 
 MainWindow::~MainWindow() {
@@ -26,9 +28,13 @@ void MainWindow::on_OpenFile_clicked() {
                     );
 
     scene = new QGraphicsScene(this);
+    newScene = new QGraphicsScene(this);
     scene->addPixmap(imagePixmap);
+    newScene->addPixmap(imagePixmap);
     scene->setSceneRect(imagePixmap.rect());
+    newScene->setSceneRect(imagePixmap.rect());
     ui->OriginalImage->setScene(scene);
+    ui->NewImage->setScene(scene);
     image.initializeCentroids();
 }
 
@@ -46,26 +52,26 @@ void MainWindow::on_SaveFile_clicked() {
 }
 
 void MainWindow::on_NextIteration_clicked() {
-    image.nextIteration();
-    imagePixmap = QPixmap::fromImage(
+    emit valueChanged(image.nextIteration());
+    newImagePixmap = QPixmap::fromImage(
                 QImage(image.getString(), image.getWidth(), image.getHeight(), QImage::Format_RGBA8888)
                     );
-    scene->clear();
-    scene->addPixmap(imagePixmap);
-    //scene->setSceneRect(imagePixmap.rect());
-    //ui->NewImage->setScene(scene);
+    newScene->clear();
+    newScene->addPixmap(newImagePixmap);
+    newScene->setSceneRect(newImagePixmap.rect());
+    ui->NewImage->setScene(newScene);
 }
 
 void MainWindow::on_Completion_clicked() {
     while (!image.isConverged()) {
-        image.nextIteration();
-        {imagePixmap = QPixmap::fromImage(
+        emit valueChanged(image.nextIteration());
+        newImagePixmap = QPixmap::fromImage(
                     QImage(image.getString(), image.getWidth(), image.getHeight(), QImage::Format_RGBA8888)
                         );
-        scene->clear();
-        scene->addPixmap(imagePixmap);
-        scene->setSceneRect(imagePixmap.rect());
-        ui->NewImage->setScene(scene);}
+        newScene->clear();
+        newScene->addPixmap(newImagePixmap);
+        newScene->setSceneRect(newImagePixmap.rect());
+        ui->NewImage->setScene(newScene);
     }
 }
 

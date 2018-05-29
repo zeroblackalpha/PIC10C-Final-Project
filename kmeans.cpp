@@ -157,10 +157,10 @@ void kmeans::classifyPoints() {
     }
 }
 
-void kmeans::nextIteration() {
+int kmeans::nextIteration() {
     ++iterNum;
     this->classifyPoints();
     this->calculateCentroids();
     this->generateImage();
-    cout << "Iteration number:" << iterNum << endl;
+    return iterNum;
 }

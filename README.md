@@ -9,17 +9,18 @@ The choice of PNG is a necessary one as an uncompressed image is required.
 * K-means++ initializations
 * Preliminary GUI
 * Step by step algorithm visualization
+* Original/New side by side comparison
 * File Open/Save
 * PNG File Support
+* Iteration Counter
 
 ## Future Improvements
 * Classification optimization (K-D Tree)
 * Multi-threading
 * Improve memory use
-* Improved explanation
-* Correct iteration counter
 * Correct iteration progress bar
 * Prevent GUI lockup
+* Improved GUI
 * Support for other image formats
 
 ## Related papers

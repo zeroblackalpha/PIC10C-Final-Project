@@ -14,7 +14,7 @@ public:
     int getWidth();
     int getHeight();
     void writePNG(const char* filename);
-    void nextIteration();
+    int nextIteration();
     bool isConverged();
     void initializeCentroids();
 

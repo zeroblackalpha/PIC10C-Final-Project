@@ -30,3 +30,4 @@ Credits to IconMinds for their cute penguin logo:[Iconminds](http://www.iconarch
 ## Attributions
 Credits to lodev.org and their fantastic LodePNG library.
 Credits to The Qt Company for their fantasitc Qt GUI libraries.
+Credits to Intel for their TBB library.

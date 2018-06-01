@@ -10,9 +10,7 @@ using std::cout;
 using std::endl;
 using std::uniform_int_distribution;
 
-kmeans::kmeans() {
-
-}
+kmeans::kmeans() { }
 
 kmeans::kmeans(const char* filename, int clusterNum):clusterNum(clusterNum) {
     unsigned error = lodepng::decode(imageData, width, height, filename);
@@ -22,9 +20,7 @@ kmeans::kmeans(const char* filename, int clusterNum):clusterNum(clusterNum) {
     clusterAssignments = vector<int>(width * height, 0);
 }
 
-kmeans::~kmeans() {
-
-}
+kmeans::~kmeans() { }
 
 void kmeans::initializeCentroids() {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -61,7 +57,6 @@ void kmeans::initializeCentroids() {
             total += x;
         }
     }
-    cout << "Completed Initializations" << endl;
     for (int i = 0; i < clusterNum; ++i) {
         for (int j = 0; j < 4; ++j) {
             centroidData[4*i + j] = (double)imageData[4*centroidIndex[i]+j];
@@ -92,6 +87,10 @@ int kmeans::getWidth() {
 
 int kmeans::getHeight() {
     return height;
+}
+
+int kmeans::getIteration() {
+    return iterNum;
 }
 
 bool kmeans::isConverged() {
@@ -149,9 +148,7 @@ void kmeans::calculateCentroids() {
 
 void kmeans::classifyPoints() {
     vector<int> compare = clusterAssignments;
-    for (size_t i = 0; i < width*height; ++i) {
-        clusterAssignments[i] = classifyPoint(i);
-    }
+    tbb::parallel_for(tbb::blocked_range<std::size_t>(0, width*height, 512), pointClassifier(*this));
     if (clusterAssignments == compare) {
         converged = true;
     }

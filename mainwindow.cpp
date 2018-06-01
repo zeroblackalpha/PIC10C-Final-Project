@@ -13,57 +13,61 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_OpenFile_clicked() {
-    QString imagePath = QFileDialog::getOpenFileName(
+    imagePath = QFileDialog::getOpenFileName(
                 this,
                 tr("Open File"),
                 "",
                 tr("PNG (*.png)" )
                 );
-    QByteArray temp = imagePath.toLatin1();
-    const char *imagePathString = temp.data();
-    image = kmeans(imagePathString, clusterNum);
+    if (imagePath != "") {
+        QByteArray temp = imagePath.toLatin1();
+        const char *imagePathString = temp.data();
+        image = kmeans(imagePathString, clusterNum);
 
-    imagePixmap = QPixmap::fromImage(
-                QImage(image.getString(), image.getWidth(), image.getHeight(), QImage::Format_RGBA8888)
-                    );
+        imagePixmap = QPixmap::fromImage(
+                    QImage(image.getString(), image.getWidth(), image.getHeight(), QImage::Format_RGBA8888)
+                        );
 
-    scene = new QGraphicsScene(this);
-    newScene = new QGraphicsScene(this);
-    scene->addPixmap(imagePixmap);
-    newScene->addPixmap(imagePixmap);
-    scene->setSceneRect(imagePixmap.rect());
-    newScene->setSceneRect(imagePixmap.rect());
-    ui->OriginalImage->setScene(scene);
-    ui->NewImage->setScene(scene);
-    image.initializeCentroids();
+        scene = new QGraphicsScene(this);
+        newScene = new QGraphicsScene(this);
+        scene->addPixmap(imagePixmap);
+        newScene->addPixmap(imagePixmap);
+        scene->setSceneRect(imagePixmap.rect());
+        newScene->setSceneRect(imagePixmap.rect());
+        ui->OriginalImage->setScene(scene);
+        ui->NewImage->setScene(scene);
+        image.initializeCentroids();
+    }
 }
 
 void MainWindow::on_SaveFile_clicked() {
-    QString imagePath = QFileDialog::getSaveFileName(
+    QString saveImagePath = QFileDialog::getSaveFileName(
                 this,
                 tr("Save File"),
                 "",
                 tr("PNG (*.png)" )
                 );
-    QByteArray temp = imagePath.toLatin1();
+    QByteArray temp = saveImagePath.toLatin1();
     const char *imagePathString = temp.data();
 
     image.writePNG(imagePathString);
 }
 
 void MainWindow::on_NextIteration_clicked() {
-    emit valueChanged(image.nextIteration());
-    newImagePixmap = QPixmap::fromImage(
-                QImage(image.getString(), image.getWidth(), image.getHeight(), QImage::Format_RGBA8888)
-                    );
-    newScene->clear();
-    newScene->addPixmap(newImagePixmap);
-    newScene->setSceneRect(newImagePixmap.rect());
-    ui->NewImage->setScene(newScene);
+    if (!image.isConverged() && image.getIteration() < iterationNum) {
+        emit valueChanged(image.nextIteration());
+        newImagePixmap = QPixmap::fromImage(
+                    QImage(image.getString(), image.getWidth(), image.getHeight(), QImage::Format_RGBA8888)
+                        );
+        newScene->clear();
+        newScene->addPixmap(newImagePixmap);
+        newScene->setSceneRect(newImagePixmap.rect());
+        ui->NewImage->setScene(newScene);
+    }
 }
 
 void MainWindow::on_Completion_clicked() {
-    while (!image.isConverged()) {
+    while (!image.isConverged() && image.getIteration() < iterationNum) {
         emit valueChanged(image.nextIteration());
         newImagePixmap = QPixmap::fromImage(
                     QImage(image.getString(), image.getWidth(), image.getHeight(), QImage::Format_RGBA8888)
@@ -77,6 +81,20 @@ void MainWindow::on_Completion_clicked() {
 
 void MainWindow::on_ClusterNum_valueChanged(int arg1) {
     clusterNum = arg1;
+    if (imagePath != "") {
+        QByteArray temp = imagePath.toLatin1();
+        const char *imagePathString = temp.data();
+        kmeans newImage(imagePathString, clusterNum);
+        image = newImage;
+        newImagePixmap = QPixmap::fromImage(
+                    QImage(image.getString(), image.getWidth(), image.getHeight(), QImage::Format_RGBA8888)
+                        );
+        newScene->clear();
+        newScene->addPixmap(newImagePixmap);
+        newScene->setSceneRect(newImagePixmap.rect());
+        ui->NewImage->setScene(newScene);
+        image.initializeCentroids();
+    }
 }
 
 void MainWindow::on_IterationNum_valueChanged(int arg1) {

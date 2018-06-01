@@ -2,15 +2,19 @@
 #define KMEANS_H
 
 #include <vector>
+#include "tbb/parallel_for.h"
+#include "tbb/blocked_range.h"
 
 using std::vector;
 
 class kmeans {
+friend class pointClassifier;
 public:
     kmeans();
     kmeans(const char* filename, int clusterNum);
     ~kmeans();
     const unsigned char* getString();
+    int getIteration();
     int getWidth();
     int getHeight();
     void writePNG(const char* filename);
@@ -35,6 +39,20 @@ private:
     unsigned width;
     unsigned height;
     bool converged = false;
+};
+
+class pointClassifier {
+public:
+    void operator() ( const tbb::blocked_range<std::size_t>& r ) const {
+        for (std::size_t i = r.begin(); i != r.end(); ++i) {
+            picture.clusterAssignments[i] = picture.classifyPoint(i);
+        }
+    }
+
+    pointClassifier(kmeans &p) : picture(p) { }
+
+private:
+    kmeans& picture;
 };
 
 #endif // KMEANS_H

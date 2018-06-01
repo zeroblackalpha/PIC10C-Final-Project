@@ -31,6 +31,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QString imagePath = "";
     QPixmap imagePixmap;
     QImage  *imageObject;
     QGraphicsScene *scene;

@@ -14,13 +14,13 @@
    <string>Penguin Image Quantizer</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QVBoxLayout" name="verticalLayout_4">
+   <layout class="QVBoxLayout" name="verticalLayout_5">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <widget class="QLabel" name="ProgramExplanation">
         <property name="text">
-         <string>The number of clusters specifies the number of colors in the final image. While K-means guarentees convergence to a local minima in finite time, the steps become too small to be worth it. Max Iterations is used to help put an upper cap on computation time. This program only works with .png files.</string>
+         <string>The number of clusters specifies the number of colors in the final image. While K-means guarentees convergence to a local minima in finite time, the steps become too small to be worth it. Max Iterations is used to help put an upper cap on computation time. This program only works with .png files. Once Iteration Number stops increasing, the K-means algorithm has converged and the image is locally optimal.</string>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -149,23 +149,16 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QVBoxLayout" name="verticalLayout_4">
         <item>
          <widget class="QGraphicsView" name="NewImage"/>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="label_4">
             <property name="text">
-             <string>Iteration Number:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="IterationCount">
-            <property name="text">
-             <string>0</string>
+             <string>Generated Image</string>
             </property>
            </widget>
           </item>
@@ -189,15 +182,57 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_5">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QProgressBar" name="progressBar">
-          <property name="value">
-           <number>0</number>
-          </property>
-         </widget>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="text">
+             <string>Iteration Number:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="IterationCount">
+            <property name="text">
+             <string>0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Iteration Progress:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="progressBar">
+            <property name="value">
+             <number>0</number>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>

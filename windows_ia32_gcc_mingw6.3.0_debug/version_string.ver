@@ -1,0 +1,8 @@
+#define __TBB_VERSION_STRINGS(N) \
+#N ": BUILD_HOST\t\tZEROTHALPHAPC" ENDL \
+#N ": BUILD_OS\t\tMicrosoft Windows [Version 10.0.17134.48]" ENDL \
+#N ": BUILD_GCC\t\tgcc (MinGW.org GCC-6.3.0-1) 6.3.0" ENDL \
+#N ": BUILD_TARGET\tia32" ENDL \
+#N ": BUILD_COMMAND\tg++ -g -O0 -DTBB_USE_DEBUG -DUSE_WINTHREAD -D_WIN32_WINNT=0x0502 -DMINGW_HAS_SECURE_API=1 -D__MSVCRT_VERSION__=0x0700 -msse -mthreads -m32 -march=i686 -mrtm   -flifetime-dse=1 -D__TBB_BUILD=1 -Wall -Wno-parentheses -Wno-uninitialized -Wno-non-virtual-dtor   -I../../src -I../../src/rml/include -I../../include -I." ENDL
+#define __TBB_DATETIME "Wed, 30 May 2018 18:04:56 UTC"
+#define __TBB_VERSION_YMD 2018, 0530

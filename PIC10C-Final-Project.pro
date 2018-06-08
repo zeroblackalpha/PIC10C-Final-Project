@@ -39,6 +39,6 @@ FORMS += \
 
 RC_FILE = icon.rc
 
-INCLUDEPATH += "C:\Users\ZeroB\Desktop\tbb-2018_U4\include"
-LIBS += -L"C:\Users\ZeroB\Desktop\tbb-2018_U4\build\windows_ia32_gcc_mingw6.3.0_debug" \
+INCLUDEPATH += "$$PWD/include"
+LIBS += -L"$$PWD/windows_ia32_gcc_mingw6.3.0_debug/" \
         -ltbb_debug

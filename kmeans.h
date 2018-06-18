@@ -8,7 +8,24 @@
 using std::vector;
 
 class kmeans {
+
 friend class pointClassifier;
+public:
+// Used in parallelization
+class pointClassifier {
+    public:
+        void operator() ( const tbb::blocked_range<std::size_t>& r ) const {
+            for (std::size_t i = r.begin(); i != r.end(); ++i) {
+                picture.clusterAssignments[i] = picture.classifyPoint(i);
+            }
+        }
+
+        pointClassifier(kmeans &p) : picture(p) { }
+
+    private:
+        kmeans& picture;
+    };
+
 public:
     kmeans();
     kmeans(const char* filename, int clusterNum);
@@ -20,9 +37,9 @@ public:
     void writePNG(const char* filename);
     int nextIteration();
     bool isConverged();
-    void initializeCentroids();
 
 private:
+    void initializeCentroids();
     double calculateSquaredDistance(int imageNum, int centroidNum);
     int calculateSquaredDistanceOther(int imageNum, int centroidNum);
     int classifyPoint(int a);
@@ -39,20 +56,6 @@ private:
     unsigned width;
     unsigned height;
     bool converged = false;
-};
-
-class pointClassifier {
-public:
-    void operator() ( const tbb::blocked_range<std::size_t>& r ) const {
-        for (std::size_t i = r.begin(); i != r.end(); ++i) {
-            picture.clusterAssignments[i] = picture.classifyPoint(i);
-        }
-    }
-
-    pointClassifier(kmeans &p) : picture(p) { }
-
-private:
-    kmeans& picture;
 };
 
 #endif // KMEANS_H

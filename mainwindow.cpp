@@ -19,6 +19,8 @@ void MainWindow::on_OpenFile_clicked() {
                 "",
                 tr("PNG (*.png)" )
                 );
+
+    // Check if a file is actually selected
     if (imagePath != "") {
         QByteArray temp = imagePath.toLatin1();
         const char *imagePathString = temp.data();
@@ -36,7 +38,6 @@ void MainWindow::on_OpenFile_clicked() {
         newScene->setSceneRect(imagePixmap.rect());
         ui->OriginalImage->setScene(scene);
         ui->NewImage->setScene(scene);
-        image.initializeCentroids();
     }
 }
 
@@ -81,6 +82,8 @@ void MainWindow::on_Completion_clicked() {
 
 void MainWindow::on_ClusterNum_valueChanged(int arg1) {
     clusterNum = arg1;
+
+    // Only reset UI if an image is already being processed
     if (imagePath != "") {
         QByteArray temp = imagePath.toLatin1();
         const char *imagePathString = temp.data();
@@ -93,7 +96,6 @@ void MainWindow::on_ClusterNum_valueChanged(int arg1) {
         newScene->addPixmap(newImagePixmap);
         newScene->setSceneRect(newImagePixmap.rect());
         ui->NewImage->setScene(newScene);
-        image.initializeCentroids();
     }
 }
 
